@@ -15,6 +15,7 @@ public class OverAnimation : MonoBehaviour
     public float muzzleDelayTime;
     public float muzzleFlashDuration;
     public float rotationSpeed;
+    public AudioSource overheadGunAud;
 
     private void Start()
     {
@@ -53,6 +54,7 @@ public class OverAnimation : MonoBehaviour
                     UpdateBool("isShooting", false);
                     OverHeadMouse.instance.dp.drawDistance = 1000f;
                 }
+                overheadGunAud.Stop();
             }
             else
             {
@@ -62,6 +64,13 @@ public class OverAnimation : MonoBehaviour
                     UpdateBool("isWalking", false);
                     UpdateBool("isIdle", false);
                     UpdateBool("isShooting", true);
+                    //play weapon sound
+                    if(!overheadGunAud.isPlaying)
+                    {
+                        overheadGunAud.Play();
+                    }
+                    
+
                     //rotate towards enemy
                     Vector3 _heading = enemy.transform.position - transform.position;
                     Quaternion _lookRotation = Quaternion.LookRotation(_heading,Vector3.up);
@@ -72,6 +81,8 @@ public class OverAnimation : MonoBehaviour
                     UpdateBool("isWalking", true);
                     UpdateBool("isIdle", false);
                     UpdateBool("isShooting", false);
+
+                    overheadGunAud.Stop();
                 }
             }
         }

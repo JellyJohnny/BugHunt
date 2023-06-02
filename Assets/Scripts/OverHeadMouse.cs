@@ -14,6 +14,8 @@ public class OverHeadMouse : MonoBehaviour
     public DecalProjector dp;
     public float shootDistance;
     public float stopDistance;
+    public AudioSource playerAud;
+    public AudioClip[] clips;
 
     private void Start()
     {
@@ -38,9 +40,11 @@ public class OverHeadMouse : MonoBehaviour
                     agent.stoppingDistance = stopDistance;
 
                     moveIndicator.transform.position = new Vector3(hit.point.x, moveIndicator.transform.position.y, hit.point.z);
+                    moveIndicator.GetComponent<AudioSource>().Play();
                     //dp.drawDistance = 1000f;
                     agent.GetComponent<OverAnimation>().UpdateCharactercontroller(false);
                     agent.GetComponent<OverAnimation>().canUpdateAnimation = true;
+                    
                 }
                 else
                 {
@@ -48,8 +52,17 @@ public class OverHeadMouse : MonoBehaviour
                     agent.SetDestination(hit.collider.gameObject.transform.position);
                     agent.stoppingDistance = shootDistance;
                     agent.GetComponent<OverAnimation>().enemy = hit.collider.gameObject;
+                    ChooseRandomVoiceClip();
                 }
             }
         }
+    }
+
+    void ChooseRandomVoiceClip()
+    {
+        int _rand = UnityEngine.Random.Range(0,clips.Length);
+
+        playerAud.clip = clips[_rand];
+        playerAud.Play();
     }
 }
