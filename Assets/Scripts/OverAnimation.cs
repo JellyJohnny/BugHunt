@@ -10,6 +10,11 @@ public class OverAnimation : MonoBehaviour
     public NavMeshAgent agent;
     CharacterController characterController;
     public bool canUpdateAnimation = true;
+    public GameObject enemy;
+    public GameObject muzzle;
+    public float muzzleDelayTime;
+    public float muzzleFlashDuration;
+    public float rotationSpeed;
 
     private void Start()
     {
@@ -32,18 +37,55 @@ public class OverAnimation : MonoBehaviour
     {
         if (agent.enabled)
         {
-            if (agent.remainingDistance <= 0.1f)
+            if (enemy == null)
             {
-                UpdateBool("isWalking", false);
-                UpdateBool("isIdle", true);
-                OverHeadMouse.instance.dp.drawDistance = 0f;
+                if (agent.velocity.magnitude <= 0.1f)
+                {
+                    UpdateBool("isWalking", false);
+                    UpdateBool("isIdle", true);
+                    UpdateBool("isShooting", false);
+                    OverHeadMouse.instance.dp.drawDistance = 0f;
+                }
+                else
+                {
+                    UpdateBool("isWalking", true);
+                    UpdateBool("isIdle", false);
+                    UpdateBool("isShooting", false);
+                    OverHeadMouse.instance.dp.drawDistance = 1000f;
+                }
             }
             else
             {
-                UpdateBool("isWalking", true);
-                UpdateBool("isIdle", false);
-                OverHeadMouse.instance.dp.drawDistance = 1000f;
+                float _enemyDist = Vector3.Distance(transform.position, enemy.transform.position);
+                if (agent.velocity.magnitude <= 0.1f && _enemyDist <= agent.stoppingDistance)
+                {
+                    UpdateBool("isWalking", false);
+                    UpdateBool("isIdle", false);
+                    UpdateBool("isShooting", true);
+                    //rotate towards enemy
+                    Vector3 _heading = enemy.transform.position - transform.position;
+                    Quaternion _lookRotation = Quaternion.LookRotation(_heading,Vector3.up);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, rotationSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    UpdateBool("isWalking", true);
+                    UpdateBool("isIdle", false);
+                    UpdateBool("isShooting", false);
+                }
             }
         }
+    }
+
+    public void StartMuzzleDelay()
+    {
+        StartCoroutine(MuzzleFLashDelay());
+    }
+
+    IEnumerator MuzzleFLashDelay()
+    {
+        muzzle.SetActive(true);
+        yield return new WaitForSeconds(muzzleFlashDuration);
+        muzzle.SetActive(false);
     }
 }

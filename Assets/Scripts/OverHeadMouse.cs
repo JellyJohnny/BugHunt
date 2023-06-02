@@ -12,6 +12,8 @@ public class OverHeadMouse : MonoBehaviour
     public GameObject moveIndicator;
     public LayerMask layerMask;
     public DecalProjector dp;
+    public float shootDistance;
+    public float stopDistance;
 
     private void Start()
     {
@@ -29,11 +31,24 @@ public class OverHeadMouse : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, 1000f, ~layerMask))
             {
-                agent.SetDestination(hit.point);
-                moveIndicator.transform.position = new Vector3(hit.point.x, moveIndicator.transform.position.y, hit.point.z);
-                //dp.drawDistance = 1000f;
-                agent.GetComponent<OverAnimation>().UpdateCharactercontroller(false);
-                agent.GetComponent<OverAnimation>().canUpdateAnimation = true;
+                if (hit.collider.gameObject.tag != "Enemy")
+                {
+                    agent.GetComponent<OverAnimation>().enemy = null;
+                    agent.SetDestination(hit.point);
+                    agent.stoppingDistance = stopDistance;
+
+                    moveIndicator.transform.position = new Vector3(hit.point.x, moveIndicator.transform.position.y, hit.point.z);
+                    //dp.drawDistance = 1000f;
+                    agent.GetComponent<OverAnimation>().UpdateCharactercontroller(false);
+                    agent.GetComponent<OverAnimation>().canUpdateAnimation = true;
+                }
+                else
+                {
+                    Debug.Log("clicked bug");
+                    agent.SetDestination(hit.collider.gameObject.transform.position);
+                    agent.stoppingDistance = shootDistance;
+                    agent.GetComponent<OverAnimation>().enemy = hit.collider.gameObject;
+                }
             }
         }
     }
