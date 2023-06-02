@@ -45,7 +45,10 @@ public class Movement : MonoBehaviour
         //Vector3 move = transform.right * x + transform.forward * z;
         Vector3 move = Camera.main.transform.right * x + Camera.main.transform.forward * z;
 
-        controller.Move(move * speed * Time.deltaTime);
+        if (controller.enabled && !CameraSwitching.instance.overheadCam.enabled)
+        {
+            controller.Move(move * speed * Time.deltaTime);
+        }
 
         if (Input.GetKeyDown("space") && isGrounded)
         {
@@ -54,6 +57,9 @@ public class Movement : MonoBehaviour
 
         velocity.y += gravity * Time.deltaTime;
 
-        controller.Move(velocity * Time.deltaTime);
+        if (controller.enabled && !CameraSwitching.instance.overheadCam.enabled)
+        {
+            controller.Move(velocity * Time.deltaTime);
+        }
     }
 }
