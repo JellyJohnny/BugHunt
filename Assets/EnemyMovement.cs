@@ -11,6 +11,9 @@ public class EnemyMovement : MonoBehaviour
     private void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.SetDestination(target.position);
+        if (agent.enabled)
+        {
+            agent.SetDestination(target.position);
+        }
     }
 }

@@ -16,11 +16,17 @@ public class OverAnimation : MonoBehaviour
     public float muzzleFlashDuration;
     public float rotationSpeed;
     public AudioSource overheadGunAud;
+    public GameObject overheadProjectileManager;
+
+    private void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+    }
 
     private void Start()
     {
         characterController = GetComponent<CharacterController>();  
-        agent = GetComponent<NavMeshAgent>();
+        
         anim = GetComponent<Animator>();
     }
 
@@ -45,14 +51,14 @@ public class OverAnimation : MonoBehaviour
                     UpdateBool("isWalking", false);
                     UpdateBool("isIdle", true);
                     UpdateBool("isShooting", false);
-                    OverHeadMouse.instance.dp.drawDistance = 0f;
+                    ModeManager.instance.dp.drawDistance = 0f;
                 }
                 else
                 {
                     UpdateBool("isWalking", true);
                     UpdateBool("isIdle", false);
                     UpdateBool("isShooting", false);
-                    OverHeadMouse.instance.dp.drawDistance = 1000f;
+                    ModeManager.instance.dp.drawDistance = 1000f;
                 }
                 overheadGunAud.Stop();
             }
@@ -64,8 +70,12 @@ public class OverAnimation : MonoBehaviour
                     UpdateBool("isWalking", false);
                     UpdateBool("isIdle", false);
                     UpdateBool("isShooting", true);
+                    if (!overheadProjectileManager.activeSelf)
+                    {
+                        overheadProjectileManager.SetActive(true);
+                    }
                     //play weapon sound
-                    if(!overheadGunAud.isPlaying)
+                    if (!overheadGunAud.isPlaying)
                     {
                         overheadGunAud.Play();
                     }
