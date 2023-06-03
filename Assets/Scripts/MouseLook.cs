@@ -8,6 +8,17 @@ public class MouseLook : MonoBehaviour
     public Transform playerBody;
     float xRotation = 0f;
 
+    
+    
+    bool loop = true;
+    public Animator gunAnim;
+
+    float timer;
+    public float muzzleFlashDuration;
+    public Animator muzzlAnim;
+    public Animator muzzleLightAnim;
+    public GameObject muzzleLight;
+
     //MY VARIABLES
     float mouseX = 0f;
     float mouseY = 0f;
@@ -32,5 +43,25 @@ public class MouseLook : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         playerBody.Rotate(Vector3.up * MouseX);
+
+        if(Input.GetMouseButton(0))
+        {
+            if(!gunAnim.GetBool("isFiring"))
+            {
+                gunAnim.SetBool("isFiring", true);
+                muzzlAnim.SetBool("isFlashing", true);
+                muzzleLight.SetActive(true);
+            }
+        }
+        else
+        {
+            if (gunAnim.GetBool("isFiring"))
+            {
+                gunAnim.SetBool("isFiring", false);
+                muzzlAnim.SetBool("isFlashing", false);
+                muzzleLight.SetActive(false);
+            }
+        }
     }
+
 }
