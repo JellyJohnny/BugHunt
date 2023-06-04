@@ -16,4 +16,12 @@ public class EnemyMovement : MonoBehaviour
             agent.SetDestination(target.position);
         }
     }
+
+    private void Update()
+    {
+        if (agent.enabled)
+        {
+            agent.SetDestination(target.position);
+        }
+    }
 }

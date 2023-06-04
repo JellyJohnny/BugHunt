@@ -27,7 +27,7 @@ public class ProjectileManager : MonoBehaviour
 
     IEnumerator ShootProjectile()
     {
-        GameObject _proj = Instantiate(projectile, transform.position, Quaternion.identity);
+        GameObject _proj = Instantiate(projectile, transform.position, ModeManager.instance.firstPersonCam.transform.rotation);
 
         Vector3 _rand = Random.insideUnitSphere * spread;
         Vector3 _vel = Vector3.zero;

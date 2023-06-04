@@ -2,7 +2,6 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -16,6 +15,8 @@ public class ModeManager : MonoBehaviour
     public StrategyState strategyState = new StrategyState();
     public FirstPersonState firstPersonState = new FirstPersonState();
     //ENDSTATES
+
+    bool canSwitch = true;
 
     public static ModeManager instance;
     public CinemachineVirtualCamera overheadCam;
@@ -85,20 +86,25 @@ public class ModeManager : MonoBehaviour
 
     void OnCamSwitch()
     {
-        if(currentState == strategyState)
+        if (canSwitch)
         {
-            SwitchState(firstPersonState);
-        }
-        else
-        {
-            SwitchState(strategyState);
+            if (currentState == strategyState)
+            {
+                SwitchState(firstPersonState);
+            }
+            else
+            {
+                SwitchState(strategyState);
+            }
+            canSwitch = false;
+            StartCoroutine(ResetTimescale());
         }
     }
 
     IEnumerator ResetTimescale()
     {
         yield return new WaitForSeconds(1f);
-        Time.timeScale = 1f;
+        canSwitch = true;
     }
 
     public void ChooseRandomVoiceClip()
