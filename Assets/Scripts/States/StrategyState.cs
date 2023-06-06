@@ -1,21 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class StrategyState : BaseState
 {
     public override void EnterState(ModeManager c)
     {
-        c.agent.GetComponent<CharacterController>().enabled = false;
+        //c.currentAgent.GetComponent<CharacterController>().enabled = false;
         c.overheadCam.enabled = true;
-        c.firstPersonCam.enabled = false;
-        Debug.Log("strategy state");
-        c.firstPersonCam.transform.parent.transform.parent.GetComponent<OverAnimation>().agent.enabled = true;
-        c.firstPersonCam.transform.parent.transform.parent.GetComponent<OverAnimation>().canUpdateAnimation = true;
-        Debug.Log("overhead");
-        c.playerMeshRender.forceRenderingOff = false;
-        c.gunOverhead.SetActive(true);
-        c.gunFP.SetActive(false);
         //c.mouseLook.enabled = false;
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
@@ -28,30 +21,36 @@ public class StrategyState : BaseState
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out hit, 1000f, ~c.layerMask))
+            if (Physics.Raycast(ray, out hit, 1000f, ~c.layerToIgnore))
             {
-                if (hit.collider.gameObject.tag != "Enemy")
+                if (hit.collider != null)
                 {
-                    c.overAnim.overheadProjectileManager.SetActive(false);
-                    c.agent.GetComponent<OverAnimation>().enemy = null;
-                    c.agent.SetDestination(hit.point);
-                    c.agent.stoppingDistance = c.stopDistance;
+                    c.currentAgent.GetComponent<Player>().PlayAudioClip(hit.collider.gameObject.tag.ToString());
+                    switch (hit.collider.gameObject.tag)
+                    {
+                        
+                        case "Enemy":
+                            Debug.Log("bug");
+                            c.currentAgent.GetComponent<Player>().currentEnemy = hit.collider.gameObject;
+                            
+                            break;
+                        case "Player":
+                            c.overheadCam.Follow = hit.collider.gameObject.transform;
+                            c.overheadCam.LookAt = hit.collider.gameObject.transform;
+                            c.currentAgent = hit.collider.gameObject.GetComponent<NavMeshAgent>();
+                            c.currentAgent.GetComponent<Player>().PlayerSelected();
+                            break;
+                        default:
+                            Debug.Log("ground");
+                            c.currentAgent.GetComponent<Player>().agentDestination = hit.point;
+                            c.currentAgent.GetComponent<Player>().SwitchState(c.currentAgent.GetComponent<Player>().moveState);
 
-                    c.moveIndicator.transform.position = new Vector3(hit.point.x, hit.point.y, hit.point.z);
-                    c.moveIndicator.GetComponent<AudioSource>().Play();
-                    //dp.drawDistance = 1000f;
-                    c.agent.GetComponent<OverAnimation>().UpdateCharactercontroller(false);
-                    c.agent.GetComponent<OverAnimation>().canUpdateAnimation = true;
-
-                }
-                else
-                {
-                    Debug.Log("clicked bug");
-                    //overAnim.overheadProjectileManager.SetActive(false);
-                    c.agent.SetDestination(hit.collider.gameObject.transform.position);
-                    c.agent.stoppingDistance = c.shootDistance;
-                    c.agent.GetComponent<OverAnimation>().enemy = hit.collider.gameObject;
-                    c.ChooseRandomVoiceClip();
+                            c.moveIndicator.GetComponent<MoveIndicator>().enabled = false;
+                            c.moveIndicator.transform.position = hit.point;
+                            c.moveIndicator.GetComponent<MoveIndicator>().enabled = true;
+                            break;
+                    }
+                    
                 }
             }
         }

@@ -27,7 +27,7 @@ public class ProjectileManager : MonoBehaviour
 
     IEnumerator ShootProjectile()
     {
-        GameObject _proj = Instantiate(projectile, transform.position, ModeManager.instance.firstPersonCam.transform.rotation);
+        //GameObject _proj = Instantiate(projectile, transform.position, ModeManager.instance.currentFirstPersonCamera.transform.rotation);
 
         Vector3 _rand = Random.insideUnitSphere * spread;
         Vector3 _vel = Vector3.zero;
@@ -40,7 +40,7 @@ public class ProjectileManager : MonoBehaviour
         {
             _vel = transform.forward + _rand;
         }
-        _proj.GetComponent<Rigidbody>().velocity = _vel * projectileSpeed;
+        //_proj.GetComponent<Rigidbody>().velocity = _vel * projectileSpeed;
 
         yield return new WaitForSeconds(instanceDelay);
         StartCoroutine(ShootProjectile());  

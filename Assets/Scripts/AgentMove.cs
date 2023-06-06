@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Rendering.Universal;
 
-public class OverAnimation : MonoBehaviour
+public class AgentMove : MonoBehaviour
 {
     Animator anim;
     public NavMeshAgent agent;
@@ -51,14 +51,14 @@ public class OverAnimation : MonoBehaviour
                     UpdateBool("isWalking", false);
                     UpdateBool("isIdle", true);
                     UpdateBool("isShooting", false);
-                    ModeManager.instance.dp.drawDistance = 0f;
+                    ModeManager.instance.moveIndicatorDecal.drawDistance = 0f;
                 }
                 else
                 {
                     UpdateBool("isWalking", true);
                     UpdateBool("isIdle", false);
                     UpdateBool("isShooting", false);
-                    ModeManager.instance.dp.drawDistance = 1000f;
+                    ModeManager.instance.moveIndicatorDecal.drawDistance = 1000f;
                 }
                 overheadGunAud.Stop();
             }

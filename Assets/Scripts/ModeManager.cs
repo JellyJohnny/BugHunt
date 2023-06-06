@@ -9,62 +9,64 @@ using UnityEngine.Rendering.Universal;
 
 public class ModeManager : MonoBehaviour
 {
+    public static ModeManager instance;
+    AudioSource aud;
+    bool canSwitch = true;
 
-    //STATES
+    [Header("STATES")]
     public BaseState currentState;
     public StrategyState strategyState = new StrategyState();
     public FirstPersonState firstPersonState = new FirstPersonState();
-    //ENDSTATES
 
-    bool canSwitch = true;
-
-    public static ModeManager instance;
+    [Header("STRATEGY")]
     public CinemachineVirtualCamera overheadCam;
-    public CinemachineVirtualCamera firstPersonCam;
-    public SkinnedMeshRenderer playerMeshRender;
-    //public MouseLook mouseLook;
-    public GameObject gunOverhead;
-    public GameObject gunFP;
-    AudioSource aud;
-
-    //overhead stuff
-    public NavMeshAgent agent;
     public GameObject moveIndicator;
-    public LayerMask layerMask;
-    public DecalProjector dp;
-    public float shootDistance;
-    public float stopDistance;
-    public AudioSource playerAud;
-    public AudioClip[] clips;
-    public OverAnimation overAnim;
+    public LayerMask layerToIgnore;
+    public DecalProjector moveIndicatorDecal;
+    public float minimumShootingDistance;
+    public float minimumStopDistance;
 
-    //mouse stuff
+    [Header("FIRST PERSON")]
     public float mouseSensitivity = 100f;
-    public Transform playerBody;
     public float xRotation = 0f;
-    public Animator gunAnim;
-
-    float timer;
-    public float muzzleFlashDuration;
-    public Animator muzzlAnim;
-    public Animator muzzleLightAnim;
-    public GameObject muzzleLight;
-    public AudioSource firstPersonAud;
-    public GameObject projectileManager;
-
-    //MY VARIABLES
     public float mouseX = 0f;
     public float mouseY = 0f;
-    public GameObject mouseLookParent;
+
+    
+    [Header("PLAYER")]
+    public NavMeshAgent currentAgent;
+
+    /*
+    public AudioSource currentPlayerAudio;
+    public CinemachineVirtualCamera currentFirstPersonCamera;
+    public AudioClip[] currentPlayerAudioClips;
+    public Transform currentPlayerBody;
+    public SkinnedMeshRenderer currentPlayerMeshRenderer;
+    public GameObject currentOverheadGun;
+    public GameObject currentFirstPersonGun;
+    public AgentMove currentOverheadAnimator;
+    public Animator firstPersonGunAnimator;
+    public float muzzleFlashDuration;
+    public Animator firstPersonMuzzleAnimator;
+    public Animator firstPersonMuzzleLightAnimator;
+    public GameObject firstPersonMuzzleObject;
+    public AudioSource firstPersonAudio;
+    public GameObject firstPersonProjectileManager;
+    public GameObject firstPersonParentObject;
+    */
+    [Header("UI")]
+    public GameObject tabUI;
 
     private void Start()
     {
+        currentAgent = GameObject.Find("Player").GetComponent<NavMeshAgent>();
         instance = this;
         currentState = strategyState;
         currentState.EnterState(this);
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
-        aud = GetComponent<AudioSource>();  
+        aud = GetComponent<AudioSource>();
+        
     }
 
     private void Update()
@@ -78,14 +80,9 @@ public class ModeManager : MonoBehaviour
         state.EnterState(this);
     }
 
-    public IEnumerator WeaponVisibleDelay()
-    {
-        yield return new WaitForSeconds(1f);
-        gunFP.SetActive(true);
-    }
-
     void OnCamSwitch()
     {
+        tabUI.SetActive(false);
         if (canSwitch)
         {
             if (currentState == strategyState)
@@ -105,13 +102,6 @@ public class ModeManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         canSwitch = true;
-    }
-
-    public void ChooseRandomVoiceClip()
-    {
-        int _rand = Random.Range(0, clips.Length);
-
-        playerAud.clip = clips[_rand];
-        playerAud.Play();
+        tabUI.SetActive(true);
     }
 }

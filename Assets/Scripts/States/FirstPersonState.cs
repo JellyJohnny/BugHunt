@@ -7,23 +7,26 @@ public class FirstPersonState : BaseState
 {
     public override void EnterState(ModeManager c)
     {
-        c.agent.GetComponent<CharacterController>().enabled = true;
+        /*
+        c.currentAgent.GetComponent<CharacterController>().enabled = true;
         c.overheadCam.enabled = false;
-        c.firstPersonCam.enabled = true;
+        c.currentFirstPersonCamera.enabled = true;
         Debug.Log("first person state");
-        c.firstPersonCam.transform.parent.transform.parent.GetComponent<OverAnimation>().agent.enabled = false;
-        c.firstPersonCam.transform.parent.transform.parent.GetComponent<CharacterController>().enabled = true;
+        c.currentFirstPersonCamera.transform.parent.transform.parent.GetComponent<AgentMove>().agent.enabled = false;
+        c.currentFirstPersonCamera.transform.parent.transform.parent.GetComponent<CharacterController>().enabled = true;
         Debug.Log("first person");
-        c.playerMeshRender.forceRenderingOff = true;
-        c.gunOverhead.SetActive(false);
+        c.currentPlayerMeshRenderer.forceRenderingOff = true;
+        c.currentOverheadGun.SetActive(false);
         //c.mouseLook.enabled = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         c.StartCoroutine(c.WeaponVisibleDelay());
+        */
     }
 
     public override void UpdateState(ModeManager c)
     {
+        /*
         c.mouseX = Input.GetAxis("Mouse X");
         c.mouseY = Input.GetAxis("Mouse Y");
         float MouseX = c.mouseX * c.mouseSensitivity * Time.deltaTime;
@@ -32,36 +35,37 @@ public class FirstPersonState : BaseState
         c.xRotation -= MouseY;
         c.xRotation = Mathf.Clamp(c.xRotation, -90f, 90f);
 
-        c.mouseLookParent.transform.localRotation = Quaternion.Euler(c.xRotation, 0f, 0f);
-        c.playerBody.Rotate(Vector3.up * MouseX);
+        c.firstPersonParentObject.transform.localRotation = Quaternion.Euler(c.xRotation, 0f, 0f);
+        c.currentPlayerBody.Rotate(Vector3.up * MouseX);
 
         if (Input.GetMouseButton(0))
         {
-            if (!c.gunAnim.GetBool("isFiring"))
+            if (!c.firstPersonGunAnimator.GetBool("isFiring"))
             {
-                c.gunAnim.SetBool("isFiring", true);
-                c.muzzlAnim.SetBool("isFlashing", true);
-                c.muzzleLight.SetActive(true);
-                c.projectileManager.SetActive(true);
-                if (!c.firstPersonAud.isPlaying)
+                c.firstPersonGunAnimator.SetBool("isFiring", true);
+                c.firstPersonMuzzleAnimator.SetBool("isFlashing", true);
+                c.firstPersonMuzzleObject.SetActive(true);
+                c.firstPersonProjectileManager.SetActive(true);
+                if (!c.firstPersonAudio.isPlaying)
                 {
-                    c.firstPersonAud.Play();
+                    c.firstPersonAudio.Play();
                 }
             }
         }
         else
         {
-            if (c.gunAnim.GetBool("isFiring"))
+            if (c.firstPersonGunAnimator.GetBool("isFiring"))
             {
-                c.gunAnim.SetBool("isFiring", false);
-                c.muzzlAnim.SetBool("isFlashing", false);
-                c.muzzleLight.SetActive(false);
-                c.projectileManager.SetActive(false);
-                if (c.firstPersonAud.isPlaying)
+                c.firstPersonGunAnimator.SetBool("isFiring", false);
+                c.firstPersonMuzzleAnimator.SetBool("isFlashing", false);
+                c.firstPersonMuzzleObject.SetActive(false);
+                c.firstPersonProjectileManager.SetActive(false);
+                if (c.firstPersonAudio.isPlaying)
                 {
-                    c.firstPersonAud.Stop();
+                    c.firstPersonAudio.Stop();
                 }
             }
         }
+        */
     }
 }
