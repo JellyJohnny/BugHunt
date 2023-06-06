@@ -2,19 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Animations.Rigging;
 
 public class Player : MonoBehaviour
 {
     public CharacterController charController;
     public Animator anim;
-    public NavMeshAgent agent;
+    
     public FirstPersonMove fpMove;
-    public AgentMove agentMove;
-    public Vector3 agentDestination;
     public GameObject currentEnemy;
     public GameObject currentInteractable;
     
-
     [Header("STATES")]
     public PlayerBase currentState;
     public PlayerIdle idleState = new PlayerIdle();
@@ -30,6 +28,20 @@ public class Player : MonoBehaviour
     [Header("VISIBILITY")]
     public GameObject playerMesh;
     public GameObject gunMesh;
+
+    [Header("AGENT")]
+    public NavMeshAgent agent;
+    public float minStopDistance;
+    public float minAttackDistance;
+    public AgentMove agentMove;
+
+    [Header("RIG")]
+    public RigBuilder rigBuilder;
+    public MultiAimConstraint aimConstraint;
+    public float aimSpeed;
+    public float constraintWeight = 0f;
+
+    public float turnSpeed;
 
     private void Start()
     {

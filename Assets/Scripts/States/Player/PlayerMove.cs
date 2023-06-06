@@ -7,24 +7,26 @@ public class PlayerMove : PlayerBase
     public override void EnterState(Player p)
     {
         Debug.Log("MOVE");
-        p.anim.SetBool("isIdle", false);
         p.anim.SetBool("isWalking", true);
-        p.agent.SetDestination(p.agentDestination);
+        p.anim.SetBool("isShooting", false);
     }
 
     public override void UpdateState(Player p)
     {
-        if(p.agent.remainingDistance <= p.agent.stoppingDistance)
+        float _destinationDistance = Vector3.Distance(p.transform.position, p.agent.destination);
+        if (p.currentEnemy != null)
         {
-            if(p.currentEnemy != null) 
+            if (_destinationDistance <= (p.agent.GetComponent<Player>().minAttackDistance))
             {
                 p.SwitchState(p.attackState);
             }
-            else
+        }
+        else
+        {
+            if (_destinationDistance <= (p.agent.GetComponent<Player>().minStopDistance))
             {
                 p.SwitchState(p.idleState);
             }
-
         }
     }
 }
