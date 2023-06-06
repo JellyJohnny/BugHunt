@@ -9,6 +9,11 @@ public class PlayerMove : PlayerBase
         Debug.Log("MOVE");
         p.anim.SetBool("isWalking", true);
         p.anim.SetBool("isShooting", false);
+
+        var data = p.aimConstraint.data.sourceObjects;
+        data.SetTransform(0,null);
+        p.aimConstraint.data.sourceObjects = data;
+        p.rigBuilder.Build();
     }
 
     public override void UpdateState(Player p)

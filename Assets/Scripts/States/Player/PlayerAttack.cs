@@ -10,17 +10,11 @@ public class PlayerAttack : PlayerBase
     {
         Debug.Log("ATTACK");
         p.anim.SetBool("isShooting", true);
-
-
+        p.anim.SetFloat("shootSpeed", p.shootingSpeed);
         var data = p.aimConstraint.data.sourceObjects;
         data.SetTransform(0, p.currentEnemy.transform.GetChild(2).transform);
         p.aimConstraint.data.sourceObjects = data;
-
-        p.constraintWeight = 0f;
-        p.aimConstraint.weight = p.constraintWeight;
-
         p.rigBuilder.Build();
-
     }
 
     public override void UpdateState(Player p)

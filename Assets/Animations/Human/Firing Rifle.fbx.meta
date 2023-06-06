@@ -56,7 +56,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: FireProjectile
+        data: 
+        objectReferenceParameter: {fileID: 4050527191816637141, guid: 11a948c8b66b565448be0d0e1e9dc62c,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

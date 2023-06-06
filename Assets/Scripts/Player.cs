@@ -21,9 +21,11 @@ public class Player : MonoBehaviour
 
     [Header("AUDIO")]
     public AudioSource aud;
+    public AudioSource weaponAudio;
     public AudioClip[] playerSelected;
     public AudioClip[] moveToLocation;
     public AudioClip engageEnemy;
+    public AudioClip weaponFire;
 
     [Header("VISIBILITY")]
     public GameObject playerMesh;
@@ -40,6 +42,14 @@ public class Player : MonoBehaviour
     public MultiAimConstraint aimConstraint;
     public float aimSpeed;
     public float constraintWeight = 0f;
+
+    [Header("SHOOTING")]
+    public GameObject projectilePrefab;
+    public float projectileSpeed;
+    public float shootingSpeed;
+    public float weaponSpread;
+    public Transform projectileOrigin;
+    public GameObject muzzleObject;
 
     public float turnSpeed;
 
@@ -97,9 +107,40 @@ public class Player : MonoBehaviour
 
     }
 
+    public void FireProjectile()
+    {
+        Debug.Log("Projectile!");
+        GameObject _proj = Instantiate(projectilePrefab, projectileOrigin.transform.position, Quaternion.identity);
+
+        Vector3 _rand = Random.insideUnitSphere * weaponSpread;
+        Vector3 _vel = Vector3.zero;
+
+        if (currentEnemy != null)
+        {
+            _vel = (new Vector3(currentEnemy.transform.position.x, currentEnemy.transform.position.y, currentEnemy.transform.position.z) - transform.position) + _rand;
+        }
+        else
+        {
+            _vel = transform.forward + _rand;
+        }
+        _proj.GetComponent<Rigidbody>().velocity = _vel * projectileSpeed;
+        weaponAudio.clip = weaponFire;
+        weaponAudio.Play();
+        muzzleObject.SetActive(true);
+        StartCoroutine(HideMuzzle());
+    }
+
+    IEnumerator HideMuzzle()
+    {
+        yield return new WaitForSeconds(shootingSpeed * 0.2f);
+        muzzleObject.SetActive(false);
+    }
+
     private void Update()
     {
         currentState.UpdateState(this);
+
+        anim.SetFloat("shootSpeed", shootingSpeed);
     }
 
     public void SwitchState(PlayerBase state)
