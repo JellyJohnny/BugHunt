@@ -18,7 +18,10 @@ public class EnemyMovement : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         if (agent.enabled)
         {
-            agent.SetDestination(target.position);
+            if (target != null)
+            {
+                agent.SetDestination(target.position);
+            }
         }
     }
 
@@ -26,12 +29,16 @@ public class EnemyMovement : MonoBehaviour
     {
         if (agent.enabled)
         {
-            agent.SetDestination(target.position);
+            if (target != null)
+            {
+                agent.SetDestination(target.position);
+            }
         }
     }
 
     public void TakeDamage()
     {
+        /*
         Material[] _mats = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().materials;
 
         for (int i = 0; i < _mats.Length; i++)
@@ -41,12 +48,21 @@ public class EnemyMovement : MonoBehaviour
         transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().materials = _mats;
 
         transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material = hitMaterial;
+        */
+        GetComponent<MeshRenderer>().material = hitMaterial;
         StartCoroutine(ResetMaterial());
         myHealth--;
 
         if(myHealth <= 0)
         {
-            GetComponent<Animator>().SetTrigger("isDead");
+            //GetComponent<Animator>().SetTrigger("isDead");
+            Destroy(this.gameObject);
+            GameObject[] _players = GameObject.FindGameObjectsWithTag("Player");
+
+            foreach (var p in _players)
+            {
+                p.GetComponent<Player>().currentEnemy = null;
+            }
             agent.enabled = false;
         }
         agent.enabled = false;
@@ -55,6 +71,7 @@ public class EnemyMovement : MonoBehaviour
     IEnumerator ResetMaterial()
     {
         yield return new WaitForSeconds(flashDuration);
+        /*
         transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultMaterial;
         Material[] _mats = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().materials;
 
@@ -64,6 +81,7 @@ public class EnemyMovement : MonoBehaviour
             _mats[i] = defaultMaterial;
         }
         transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().materials = _mats;
-
+        */
+        GetComponent<MeshRenderer>().material = defaultMaterial;
     }
 }

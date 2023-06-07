@@ -43,8 +43,11 @@ public class StrategyState : BaseState
                             c.currentAgent = hit.collider.gameObject.GetComponent<NavMeshAgent>(); //update the mode manager with selected player
                             c.firstPersonCam = c.currentAgent.GetComponent<Player>().fpCam;
                             c.currentAgent.GetComponent<Player>().PlayerSelected(); //run the strobe function on the player
-                            c.currentAgent.GetComponent<Player>().currentEnemy = null;
-                            c.currentAgent.stoppingDistance = c.currentAgent.GetComponent<Player>().minStopDistance;
+                            //c.currentAgent.GetComponent<Player>().currentEnemy = null;
+                            if (c.currentAgent.GetComponent<Player>().currentState != c.currentAgent.GetComponent<Player>().attackState)
+                            {
+                                c.currentAgent.stoppingDistance = c.currentAgent.GetComponent<Player>().minStopDistance;
+                            }
                             c.overheadCam.Follow = hit.collider.gameObject.transform;
                             c.overheadCam.LookAt = hit.collider.gameObject.transform;
                             break;

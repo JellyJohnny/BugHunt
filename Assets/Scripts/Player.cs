@@ -122,7 +122,7 @@ public class Player : MonoBehaviour
 
         if (currentEnemy != null)
         {
-            _vel = (new Vector3(currentEnemy.transform.position.x, currentEnemy.transform.position.y, currentEnemy.transform.position.z) - transform.position) + _rand;
+            _vel = (currentEnemy.transform.GetChild(0).transform.position + _rand) - transform.position;
         }
         else
         {
