@@ -8,7 +8,7 @@ public class EnemyMovement : MonoBehaviour
     NavMeshAgent agent;
     public Transform target;
     public float stunDuration;
-    int myHealth = 3;
+    public int myHealth = 3;
     public Material defaultMaterial;
     public Material hitMaterial;
     public float flashDuration;
@@ -32,6 +32,14 @@ public class EnemyMovement : MonoBehaviour
 
     public void TakeDamage()
     {
+        Material[] _mats = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().materials;
+
+        for (int i = 0; i < _mats.Length; i++)
+        {
+            _mats[i] = hitMaterial;
+        }
+        transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().materials = _mats;
+
         transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material = hitMaterial;
         StartCoroutine(ResetMaterial());
         myHealth--;
@@ -48,5 +56,14 @@ public class EnemyMovement : MonoBehaviour
     {
         yield return new WaitForSeconds(flashDuration);
         transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().material = defaultMaterial;
+        Material[] _mats = transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().materials;
+
+
+        for (int i = 0; i < _mats.Length; i++)
+        {
+            _mats[i] = defaultMaterial;
+        }
+        transform.GetChild(0).GetComponent<SkinnedMeshRenderer>().materials = _mats;
+
     }
 }

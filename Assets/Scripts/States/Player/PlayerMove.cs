@@ -6,7 +6,7 @@ public class PlayerMove : PlayerBase
 {
     public override void EnterState(Player p)
     {
-        Debug.Log("MOVE");
+        //Debug.Log("MOVE");
         p.anim.SetBool("isWalking", true);
         p.anim.SetBool("isShooting", false);
 

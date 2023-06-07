@@ -27,46 +27,35 @@ public class ModeManager : MonoBehaviour
     public float minimumStopDistance;
 
     [Header("FIRST PERSON")]
+    public CinemachineVirtualCamera firstPersonCam;
     public float mouseSensitivity = 100f;
     public float xRotation = 0f;
     public float mouseX = 0f;
     public float mouseY = 0f;
 
-    
+    CinemachineVirtualCamera[] _vCams;
+
+
     [Header("PLAYER")]
     public NavMeshAgent currentAgent;
 
-    /*
-    public AudioSource currentPlayerAudio;
-    public CinemachineVirtualCamera currentFirstPersonCamera;
-    public AudioClip[] currentPlayerAudioClips;
-    public Transform currentPlayerBody;
-    public SkinnedMeshRenderer currentPlayerMeshRenderer;
-    public GameObject currentOverheadGun;
-    public GameObject currentFirstPersonGun;
-    public AgentMove currentOverheadAnimator;
-    public Animator firstPersonGunAnimator;
-    public float muzzleFlashDuration;
-    public Animator firstPersonMuzzleAnimator;
-    public Animator firstPersonMuzzleLightAnimator;
-    public GameObject firstPersonMuzzleObject;
-    public AudioSource firstPersonAudio;
-    public GameObject firstPersonProjectileManager;
-    public GameObject firstPersonParentObject;
-    */
     [Header("UI")]
     public GameObject tabUI;
 
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Start()
     {
-        currentAgent = GameObject.Find("Player").GetComponent<NavMeshAgent>();
-        instance = this;
+        //currentAgent = GameObject.Find("Player").GetComponent<NavMeshAgent>();
+        
         currentState = strategyState;
         currentState.EnterState(this);
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
         aud = GetComponent<AudioSource>();
-        
     }
 
     private void Update()
@@ -83,6 +72,20 @@ public class ModeManager : MonoBehaviour
     void OnCamSwitch()
     {
         tabUI.SetActive(false);
+
+        //disable all first person cams
+        GameObject[] _players = GameObject.FindGameObjectsWithTag("Player");
+        _vCams = new CinemachineVirtualCamera[ _players.Length ];
+        for (int i = 0; i < _players.Length; i++)
+        {
+            _vCams[i] = _players[i].GetComponent<Player>().fpCam;
+        }
+
+        for (int i = 0; i < _vCams.Length; i++)
+        {
+            _vCams[i].enabled = false;
+        }
+
         if (canSwitch)
         {
             if (currentState == strategyState)

@@ -6,9 +6,10 @@ public class PlayerIdle : PlayerBase
 {
     public override void EnterState(Player p)
     {
-        Debug.Log("IDLE");
+        //Debug.Log("IDLE");
         p.anim.SetBool("isWalking", false);
         p.anim.SetBool("isShooting", false);
+        p.muzzleObject.SetActive(false);
     }
 
     public override void UpdateState(Player p)

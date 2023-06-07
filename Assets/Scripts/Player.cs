@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,10 @@ public class Player : MonoBehaviour
     public FirstPersonMove fpMove;
     public GameObject currentEnemy;
     public GameObject currentInteractable;
-    
+
+    [Header("CAMERA")]
+    public CinemachineVirtualCamera fpCam;
+
     [Header("STATES")]
     public PlayerBase currentState;
     public PlayerIdle idleState = new PlayerIdle();
@@ -109,7 +113,8 @@ public class Player : MonoBehaviour
 
     public void FireProjectile()
     {
-        Debug.Log("Projectile!");
+        //Debug.Log("Projectile!");
+
         GameObject _proj = Instantiate(projectilePrefab, projectileOrigin.transform.position, Quaternion.identity);
 
         Vector3 _rand = Random.insideUnitSphere * weaponSpread;
