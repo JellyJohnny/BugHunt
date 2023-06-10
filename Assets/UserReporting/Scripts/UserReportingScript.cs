@@ -206,7 +206,6 @@ public class UserReportingScript : MonoBehaviour
     /// </summary>
     public void CreateUserReport()
     {
-        Time.timeScale = 0f;
         // Check Creating Flag
         if (this.isCreatingUserReport)
         {
@@ -347,7 +346,6 @@ public class UserReportingScript : MonoBehaviour
     /// </summary>
     public void SubmitUserReport()
     {
-        Time.timeScale = 1f;
         // Preconditions
         if (this.isSubmitting || this.CurrentUserReport == null)
         {

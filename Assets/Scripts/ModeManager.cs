@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class ModeManager : MonoBehaviour
 {
@@ -41,18 +42,22 @@ public class ModeManager : MonoBehaviour
 
     [Header("UI")]
     public GameObject tabUI;
+    public GameObject pauseMenu;
+
+    //culling test
+
+
 
     private void Awake()
     {
         instance = this;
+        currentState = strategyState;
+        currentState.EnterState(this);
     }
 
     private void Start()
     {
         //currentAgent = GameObject.Find("Player").GetComponent<NavMeshAgent>();
-        
-        currentState = strategyState;
-        currentState.EnterState(this);
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
         aud = GetComponent<AudioSource>();
@@ -91,14 +96,55 @@ public class ModeManager : MonoBehaviour
             if (currentState == strategyState)
             {
                 SwitchState(firstPersonState);
+                StartCoroutine(Test2());
+                
             }
             else
             {
                 SwitchState(strategyState);
+                StartCoroutine(Test1());
+
             }
             canSwitch = false;
             StartCoroutine(ResetTimescale());
         }
+    }
+
+    IEnumerator Test1()
+    {
+        yield return new WaitForSeconds(1f);
+        Camera.main.cullingMask = LayerMask.GetMask("Default", "TransparentFX", "Ignore Raycast", "Water", "UI", "Player",
+                    "AerialCam");
+    }
+
+    IEnumerator Test2()
+    {
+        yield return new WaitForSeconds(1f);
+        Camera.main.cullingMask = LayerMask.GetMask("Default", "TransparentFX", "Ignore Raycast", "Water", "UI", "Player", "FirstPersonCam");
+    }
+
+    void OnEscape()
+    {
+        pauseMenu.SetActive(!pauseMenu.activeSelf);
+        if(pauseMenu.activeSelf)
+        {
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+        }
+    }
+
+    public void ResumeGame()
+    {
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1f;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     IEnumerator ResetTimescale()
