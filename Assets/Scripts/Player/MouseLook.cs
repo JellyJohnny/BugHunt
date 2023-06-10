@@ -11,8 +11,17 @@ public class MouseLook : MonoBehaviour
 
     private void Update()
     {
-        Look();
-        Shooting();
+        if (Time.timeScale > 0)
+        {
+            Look();
+            Shooting();
+        }
+    }
+
+    public void ResetView()
+    {
+        transform.parent.transform.eulerAngles = transform.parent.transform.eulerAngles;
+        transform.localRotation = transform.rotation;
     }
     public void Look() // Look rotation (UP down is Camera) (Left right is Transform rotation)
     {

@@ -858,7 +858,6 @@ MonoBehaviour:
   agent: {fileID: 0}
   minStopDistance: 0.1
   minAttackDistance: 3
-  agentMove: {fileID: 0}
   rigBuilder: {fileID: 2494535516815665695}
   aimConstraint: {fileID: 2494535515965002258}
   aimSpeed: 3
@@ -1210,7 +1209,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0
   m_Effectors: []
 --- !u!1 &2627599198238796024
 GameObject:

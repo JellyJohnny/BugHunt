@@ -53,6 +53,7 @@ public class ModeManager : MonoBehaviour
         instance = this;
         currentState = strategyState;
         currentState.EnterState(this);
+        StartCoroutine(Test1(0f));
     }
 
     private void Start()
@@ -76,11 +77,14 @@ public class ModeManager : MonoBehaviour
 
     void OnCamSwitch()
     {
-        tabUI.SetActive(false);
+        SwitchCamera();
+    }
 
+    void SwitchCamera()
+    {
         //disable all first person cams
         GameObject[] _players = GameObject.FindGameObjectsWithTag("Player");
-        _vCams = new CinemachineVirtualCamera[ _players.Length ];
+        _vCams = new CinemachineVirtualCamera[_players.Length];
         for (int i = 0; i < _players.Length; i++)
         {
             _vCams[i] = _players[i].GetComponent<Player>().fpCam;
@@ -93,16 +97,17 @@ public class ModeManager : MonoBehaviour
 
         if (canSwitch)
         {
+            tabUI.SetActive(false);
             if (currentState == strategyState)
             {
                 SwitchState(firstPersonState);
-                StartCoroutine(Test2());
-                
+                StartCoroutine(Test2(1f));
+
             }
             else
             {
                 SwitchState(strategyState);
-                StartCoroutine(Test1());
+                StartCoroutine(Test1(1f));
 
             }
             canSwitch = false;
@@ -110,30 +115,43 @@ public class ModeManager : MonoBehaviour
         }
     }
 
-    IEnumerator Test1()
+    IEnumerator Test1(float customTime)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(customTime);
         Camera.main.cullingMask = LayerMask.GetMask("Default", "TransparentFX", "Ignore Raycast", "Water", "UI", "Player",
                     "AerialCam");
     }
 
-    IEnumerator Test2()
+    IEnumerator Test2(float customTime)
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(customTime);
         Camera.main.cullingMask = LayerMask.GetMask("Default", "TransparentFX", "Ignore Raycast", "Water", "UI", "Player", "FirstPersonCam");
     }
 
     void OnEscape()
     {
         pauseMenu.SetActive(!pauseMenu.activeSelf);
-        if(pauseMenu.activeSelf)
+
+        if (pauseMenu.activeSelf)
         {
             Time.timeScale = 0f;
+            if (currentState == firstPersonState)
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+            }
         }
         else
         {
             Time.timeScale = 1f;
+            if (currentState == firstPersonState)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
+
+        
     }
 
     public void ResumeGame()

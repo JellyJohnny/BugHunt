@@ -10,6 +10,7 @@ public class PlayerIdle : PlayerBase
         p.anim.SetBool("isWalking", false);
         p.anim.SetBool("isShooting", false);
         p.muzzleObject.SetActive(false);
+        p.mLook.ResetView();
     }
 
     public override void UpdateState(Player p)
